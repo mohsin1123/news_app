@@ -26,26 +26,46 @@ class httpsServiceImpl implements HttpService {
       InterceptorsWrapper(
         onError: (error, handler) {
           print(error.message);
+          handler.next(error);
         },
         onRequest: ((request, handler) {
           print(
             "${request.method} | ${request.path}",
           );
+          handler.next(request);
         }),
         onResponse: (response, handler) {
           print(
               "${response.statusCode} ${response.statusMessage} ${response.data}");
+          handler.next(response);
         },
       ),
     );
   }
+  //   _dio.interceptors.add(
+  //     InterceptorsWrapper(
+  //       onError: (error, handler) {
+  //         print(error.message);
+  //       },
+  //       onRequest: ((request, handler) {
+  //         print(
+  //           "${request.method} | ${request.path}",
+  //         );
+  //       }),
+  //       onResponse: (response, handler) {
+  //         print(
+  //             "${response.statusCode} ${response.statusMessage} ${response.data}");
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   void init() {
     _dio = Dio(
       BaseOptions(
         baseUrl: BASE_URL,
-        headers: {"Authorization" : "Bearer $API_KEY"},
+        headers: {"Authorization": "Bearer $API_KEY"},
       ),
     );
     initializeInterceptor();
